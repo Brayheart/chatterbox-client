@@ -49,7 +49,9 @@ app.fetch = function() {
       let chats = data.results;
 
       chats.forEach(function(msg) {
-        app.renderMessage(msg);
+        if (!(/<|>/).test(msg.text)) {
+          app.renderMessage(msg, true);
+        }
       });
 
     },
@@ -64,7 +66,7 @@ app.clearMessages = function() {
   $('#chats').html('');
 };
 
-app.renderMessage = function(message) {
+app.renderMessage = function(message, init) {
   // Format of message input:
 
   //   var message = {
@@ -75,8 +77,11 @@ app.renderMessage = function(message) {
 
   let $msg = $(`<div class="msg"><span class="username">${message.username}:<span>
                 ${message.text}</div><br>`);
-
-  $('#chats').append($msg);
+  if (init) {
+    $('#chats').append($msg);
+  } else {
+    $('#chats').prepend($msg);
+  }
 };
 
 app.renderRoom = function(room) {
@@ -84,11 +89,21 @@ app.renderRoom = function(room) {
 };
 
 app.handleUsernameClick = function() {
-
 };
 
 app.handleSubmit = function(msg) {
+  
+  const sentMsg = {
+    'username': 'test',
+    text: msg    
+    // roomname:
+  };
+  
+  this.send(sentMsg);
 
+  this.renderMessage(sentMsg, false);
+
+  $('#msg').val('');
 };
 
 $(document).ready(function() {
