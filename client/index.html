@@ -28,12 +28,11 @@
       <h1>chatterbox</h1>
         <!-- Our HTML -->
         <div>
-          <ol id="roomSelect"></ol>
+          <select id="roomSelect"></select>
         </div>
-        <form>
-          <input name="message"><br>
-          <input name="send" type="submit">
-        </form>
+        <input id=msg name="message"><br>
+        <button type=button id="send">Send</button>
+<!-- dont put input elements in form, wont register submit event, why? -->
     </div>
     <div id="chats">
     </div>

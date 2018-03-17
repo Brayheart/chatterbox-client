@@ -9,15 +9,13 @@ app.init = function() {
     app.handleUsernameClick();
   });
 
-  $('#send .submit').on('submit', function() {
-    app.handleSubmit();
+  $('#send').on('click', function() {
+    let msg = $('#msg').val();
+    app.handleSubmit(msg);
+    $('#msg').text('');
   });
-  
-  app.fetch();
 
-//   chats.forEach(function(msg) {
-//     this.renderMessage(msg);
-//   });
+  app.fetch();
 };
 
 app.send = function(message) {
@@ -29,6 +27,7 @@ app.send = function(message) {
     contentType: 'application/json',
     success: function (data) {
       console.log('chatterbox: Message sent');
+
     },
     error: function (data) {
       // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
@@ -39,14 +38,13 @@ app.send = function(message) {
 
 app.fetch = function() {
 
-  var context = this;
-
   $.ajax({
     url: this.server,
     type: 'GET',
+    data: 'order=-createdAt',
     contentType: 'application/json',
     success: function (data) {
-      console.log('chatterbox: Message sent\n', data);
+      console.log('chatterbox: Message received');
 
       let chats = data.results;
 
@@ -79,21 +77,18 @@ app.renderMessage = function(message) {
                 ${message.text}</div><br>`);
 
   $('#chats').append($msg);
-
-  
-  
 };
 
 app.renderRoom = function(room) {
-  $('#roomSelect').append(`<li>${room}</li>`);
+  $('#roomSelect').append(`<option>${room}</option>`);
 };
 
 app.handleUsernameClick = function() {
-//   return;
+
 };
 
-app.handleSubmit = function() {
-//   return;
+app.handleSubmit = function(msg) {
+
 };
 
 $(document).ready(function() {
