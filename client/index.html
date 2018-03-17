@@ -8,7 +8,8 @@
     <!-- dependencies -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/underscore/underscore.js"></script>
-    <script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script>    
       // YOU DO NOT NEED TO EDIT THIS CODE
       if (!/(&|\?)username=/.test(window.location.search)) {
         var newSearch = window.location.search;
@@ -25,16 +26,32 @@
   </head>
   <body>
     <div id="main">
-      <h1>chatterbox</h1>
+      <h1 >chatterbox</h1>
         <!-- Our HTML -->
         <div>
-          <select id="roomSelect"></select>
+          <span>
+            <input type="text" name="roomCreate" placeholder="Create New Room">
+            <select class="selectpicker" id="roomSelect">
+            </select>
+            <button class="btn btn-xs">Add Room</button>
+          </span>
+          <br><br>
+          <input class="form-control" id=msg name="message" placeholder="Join the conversation!"><br>
+          <button class="btn btn-primary btn-lg" type=button id="send">Send</button>
         </div>
-        <input id=msg name="message"><br>
-        <button type=button id="send">Send</button>
 <!-- dont put input elements in form, wont register submit event, why? -->
     </div>
     <div id="chats">
     </div>
+    <!-- New Room Modal Window -->
+    <!-- <div class="modalRoom">
+      <div class="modal-content">
+        <span class="close">$times;</span>
+        <h2>New Room Name</h2>
+        <br>
+        <input class="form-control" />
+        <button id="newRoom" class="btn btn-secondary btn-sm">Create Room</button>
+      </div>
+    </div -->>
   </body>
 </html>

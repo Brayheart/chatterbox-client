@@ -94,3 +94,37 @@ form input[type=text] {
     padding: 5px 5px
 }
 
+.modalRoom {
+    background-color: #fefefe;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 40%;
+    height: 40%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 40%;
+}
+
+.close {
+    color: hover;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}

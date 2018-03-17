@@ -15,6 +15,15 @@ app.init = function() {
     $('#msg').text('');
   });
 
+
+  $('#roomSelect').on('change', function() {
+    app.fetch();
+  });
+
+  
+  
+  $('#roomSelect').append('<option>lobby</option>');
+
   app.fetch();
 };
 
@@ -26,6 +35,7 @@ app.send = function(message) {
     data: JSON.stringify(message),
     contentType: 'application/json',
     success: function (data) {
+      console.log('data sent', data);
       console.log('chatterbox: Message sent');
 
     },
@@ -48,9 +58,14 @@ app.fetch = function() {
 
       let chats = data.results;
 
+      let currentRoom = $('#roomSelect').val();
+
       chats.forEach(function(msg) {
         if (!(/<|>/).test(msg.text)) {
-          app.renderMessage(msg, true);
+          if (msg.roomname === currentRoom) {
+            console.log(msg.roomname);
+            app.renderMessage(msg, true);
+          }
         }
       });
 
@@ -66,7 +81,7 @@ app.clearMessages = function() {
   $('#chats').html('');
 };
 
-app.renderMessage = function(message, init) {
+app.renderMessage = function(message, fetching) {
   // Format of message input:
 
   //   var message = {
@@ -77,7 +92,10 @@ app.renderMessage = function(message, init) {
 
   let $msg = $(`<div class="msg"><span class="username">${message.username}:<span>
                 ${message.text}</div><br>`);
-  if (init) {
+  
+  // If fetching messages, append messages
+  // If posting singular message, prepend message.
+  if (fetching) {
     $('#chats').append($msg);
   } else {
     $('#chats').prepend($msg);
@@ -95,8 +113,8 @@ app.handleSubmit = function(msg) {
   
   const sentMsg = {
     'username': 'test',
-    text: msg    
-    // roomname:
+    text: msg,
+    roomname: $('roomSelect').val()
   };
   
   this.send(sentMsg);
