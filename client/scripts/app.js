@@ -12,22 +12,49 @@ app.init = function() {
   $('#send').on('click', function() {
     let msg = $('#msg').val();
     app.handleSubmit(msg);
-    $('#msg').text('');
   });
 
 
   $('#roomSelect').on('change', function() {
-    app.fetch();
+    app.fetch(function(results) {
+      results.forEach(function(msg) {
+        if (msg.roomname === $('#roomSelect').val()) {
+          app.renderMessage(msg, true);
+        }
+      });
+    });
   });
 
-  
+  $('.spinner').attr('src', './images/spiffygif_46x46.gif');
   
   $('#roomSelect').append('<option>lobby</option>');
 
-  app.fetch();
+  var rooms = ['lobby'];
+
+  app.fetch(function(results) {
+    results.forEach(function(msg) {
+
+      if (rooms.indexOf(msg.roomname) < 0) {
+        rooms.push(msg.roomname);
+      }
+
+      if (msg.roomname === rooms[0]) {
+        app.renderMessage(msg, true);
+      }
+    });
+
+    rooms.shift(); // cut off lobby
+    rooms.forEach(function(room) {
+      $('#roomSelect').append(`<option>${room}</option>`);
+    });
+
+    $('.spinner').removeAttr('src');
+  });
+
 };
 
 app.send = function(message) {
+console.log('msg', message)
 
   $.ajax({
     url: this.server,
@@ -37,7 +64,6 @@ app.send = function(message) {
     success: function (data) {
       console.log('data sent', data);
       console.log('chatterbox: Message sent');
-
     },
     error: function (data) {
       // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
@@ -46,7 +72,7 @@ app.send = function(message) {
   });
 };
 
-app.fetch = function() {
+app.fetch = function(callback) {
 
   $.ajax({
     url: this.server,
@@ -56,18 +82,20 @@ app.fetch = function() {
     success: function (data) {
       console.log('chatterbox: Message received');
 
-      let chats = data.results;
+      callback(data.results);
 
-      let currentRoom = $('#roomSelect').val();
+      // let chats = data.results;
 
-      chats.forEach(function(msg) {
-        if (!(/<|>/).test(msg.text)) {
-          if (msg.roomname === currentRoom) {
-            console.log(msg.roomname);
-            app.renderMessage(msg, true);
-          }
-        }
-      });
+      // let currentRoom = $('#roomSelect').val();
+
+      // chats.forEach(function(msg) {
+      //   if (!(/<|>/).test(msg.text)) {
+      //     if (msg.roomname === currentRoom) {
+      //       console.log(msg.roomname);
+      //       app.renderMessage(msg, true);
+      //     }
+      //   }
+      // });
 
     },
     error: function (data) {
@@ -90,8 +118,10 @@ app.renderMessage = function(message, fetching) {
   //   roomname: '4chan'
   // };
 
-  let $msg = $(`<div class="msg"><span class="username">${message.username}:<span>
-                ${message.text}</div><br>`);
+  let $msg = $(`<div class="chat">
+                  <span class="username">${message.username}: </span>
+                  <span>${_.escape(message.text)}</span>
+                </div>`);
   
   // If fetching messages, append messages
   // If posting singular message, prepend message.
